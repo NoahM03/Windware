@@ -2,8 +2,13 @@ from flask import Flask, render_template, jsonify
 import subprocess
 from threading import Timer
 from graph import get_latest_wind_speed
+# from receive_data_raspberry import run_reciever
+import receive_data_raspberry
 
 app = Flask(__name__)
+
+# reciever_thread = Thread(target=run_reciever, daemon=True)
+# reciever_thread.start()
 
 @app.route("/")
 def index():

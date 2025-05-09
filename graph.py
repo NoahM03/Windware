@@ -6,11 +6,11 @@ import pandas as pd
 # Samle data fra CSV
 
 # Wind speed data indsamling (sidste 20)
-CSV_read = pd.read_csv("test_data.csv", sep=",", header=0) # Læser CSV filen
+CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
 pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()
 
 # Wind direction data indsamling (sidste) 
-CSV_read = pd.read_csv("test_data.csv", sep=",", header=0) # Læser CSV filen
+CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
 pre_Wind_direction_data = CSV_read["WIND_DIR"].iloc[-1]
 
 # Vindhastigheds parametre
@@ -18,7 +18,7 @@ pre_Wind_direction_data = CSV_read["WIND_DIR"].iloc[-1]
 wind_warning = CSV_read["WIND_SPEED"].iloc[-1]
 
 def get_latest_wind_speed():
-    CSV_read = pd.read_csv("test_data.csv", sep=",", header=0) 
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
     return CSV_read["WIND_SPEED"][0]
 
 print(wind_warning)
