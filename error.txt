@@ -45,3 +45,44 @@ serial.serialutil.SerialException: device reports readiness to read but returned
     print(f"Vindretning: {data['WIND_DIR']} grader, "
                           ~~~~^^^^^^^^^^^^
 KeyError: 'WIND_DIR'
+
+
+and
+
+Starter modtagelse af data...
+Starter modtagelse af data...
+Starter modtagelse af data...
+Starter modtagelse af data...
+1500.0
+1500.0
+1500.0
+1500.0
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+raw line N_:0SE:OWE:0,WIND_DIR_CHANGE:0
+vindretning: unknown grader, Vindhastighed: unknown, Effekt unknown, Retningsændring 0
+1500.0
+1500.0
+1500.0
+1500.0
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+raw line R0NSD,OW:W__AG:0
+vindretning: unknown grader, Vindhastighed: unknown, Effekt unknown, Retningsændring unknown
+raw line NI1WID_PEE:0PER0,INDDIRCHNE
+vindretning: unknown grader, Vindhastighed: unknown, Effekt unknown, Retningsændring unknown
+1500.0
+1500.0
+1500.0
+1500.0
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[Serial Error] device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+raw line N:0ND_PEE:,OWER:0WIN_DIRCAGE:6
+vindretning: unknown grader, Vindhastighed: unknown, Effekt unknown, Retningsændring unknown
+raw line WDR80,SD91P,D_HN
+vindretning: unknown grader, Vindhastighed: unknown, Effekt unknown, Retningsændring unknown
+^C[2025-05-12 18:14:04 +0200] [3299] [INFO] Handling signal: int
+[2025-05-12 18:14:04 +0200] [3303] [INFO] Worker exiting (pid: 3303)
+[2025-05-12 18:14:04 +0200] [3301] [INFO] Worker exiting (pid: 3301)
+[2025-05-12 18:14:07 +0200] [3299] [INFO] Shutting down: Master
