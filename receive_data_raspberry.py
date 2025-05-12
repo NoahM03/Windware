@@ -2,6 +2,8 @@ import serial         # Importerer pyserial-biblioteket til seriel kommunikation
 import time           # Bruges til at vente efter Arduino reset
 import csv            # Bruges til at skrive til en CSV-fil
 from datetime import datetime  # Bruges til at tilføje tidsstempel til hver måling
+import threading
+
 
 def run_reciever():
     # Åben seriel port (skal muligvis tilpasses hvis nødvendigt, f.eks. port: /dev/ttyUSB0 i stedet for)
@@ -63,4 +65,10 @@ def parse_data(line):
         return None
 
 
-run_reciever()
+
+def start_receiver_thread():
+    threading.Thread(target=run_reciever, daemon=True).start()
+
+
+if __name__ == "__main__":
+    run_reciever()  # This only runs if you run this file directly

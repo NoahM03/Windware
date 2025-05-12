@@ -2,8 +2,7 @@ from flask import Flask, render_template, jsonify
 # import subprocess
 import threading
 from graph import get_latest_wind_speed, wind_speed_data, wind_direction_data
-# from receive_data_raspberry import run_reciever
-import receive_data_raspberry
+from receive_data_raspberry import start_receiver_thread
 import time
 
 app = Flask(__name__)
@@ -13,6 +12,8 @@ app = Flask(__name__)
 
 # Timer flag (tjekker om timeren skal stoppe)
 stop_timer = False
+
+start_receiver_thread()
 
 def Data():
     # if stop_timer:
@@ -41,7 +42,6 @@ def index():
 
 @app.route("/windwaredata.html")
 def windwaredata():
-    Data()
     return render_template("windwaredata.html")
 
 @app.route("/about us.html")
@@ -56,8 +56,9 @@ def downloaddata():
 @app.route("/check_limit")
 def check_limit():
     limit = 13  # Sætter grænsen for vindhastighed
-    if get_latest_wind_speed() >= limit:
-        return jsonify({"warning": True, "message": f'Wind speed warning! The wind speed has reached {get_latest_wind_speed()}!'})
+    latest_wind_speed = get_latest_wind_speed()
+    if latest_wind_speed >= limit:
+        return jsonify({"warning": True, "message": f'Wind speed warning! The wind speed has reached {latest_wind_speed}!'})
     return jsonify({"warning": False})
 
 
