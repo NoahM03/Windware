@@ -15,4 +15,78 @@ serial.serialutil.SerialException: device reports readiness to read but returned
 raw line WINDR:NDSE:0P883,IIR_CE:0
 Parse error: could not convert string to float: 'NDSE:0P883'
 raw line _WE,OWRND_DHN
+0.0
+0.0
+0.0
+Exception in thread Thread-1 (run_reciever):
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 975, in run
+Exception in thread Thread-1 (run_reciever):
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+raw line WIND_D0,WIPEED:0,POWER:488IND_DIR_CHANGE:0
+Parse error: could not convert string to float: '488IND_DIR_CHANGE:0'
+  File "/usr/lib/python3.11/threading.py", line 975, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/windware/Desktop/Windware - Website/receive_data_raspberry.py", line 29, in run_reciever
+    line = ser.readline().decode('utf-8').strip()  # Læser én linje og dekoder den til tekst
+           ^^^^^^^^^^^^^^
+  File "/home/windware/Desktop/Windware - Website/venv/lib/python3.11/site-packages/serial/serialposix.py", line 595, in read
+    raise SerialException(
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+    self._target(*self._args, **self._kwargs)
+  File "/home/windware/Desktop/Windware - Website/receive_data_raspberry.py", line 29, in run_reciever
+    line = ser.readline().decode('utf-8').strip()  # Læser én linje og dekoder den til tekst
+           ^^^^^^^^^^^^^^
+  File "/home/windware/Desktop/Windware - Website/venv/lib/python3.11/site-packages/serial/serialposix.py", line 595, in read
+    raise SerialException(
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+0.0
+0.0
+0.0
+0.0
+raw line WIND_DIR:0,WIND_SPEED:0,POWER:48853,WIND_DIR_CHANGE:0
+Vindretning: 0.0 grader, Vindhastighed: 0.0 m/s, Effekt: 48853.0 W, Retningsændring: 0.0 grader
+0.0
+0.0
+0.0
+0.0
+raw line WIND_DIR:0,WIND_SPEED:0,POWER:48853,WIND_DIR_CHANGE:0
+Vindretning: 0.0 grader, Vindhastighed: 0.0 m/s, Effekt: 48853.0 W, Retningsændring: 0.0 grader
+0.0
+0.0
+0.0
+0.0
+raw line WIND_DIR:0,WIND_SPEED:0,POWER:48853,WIND_DIR_CHANGE:0
+Vindretning: 0.0 grader, Vindhastighed: 0.0 m/s, Effekt: 48853.0 W, Retningsændring: 0.0 grader
+0.0
+
+
+
+Exception in thread Thread-1 (run_reciever):
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 975, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/windware/Desktop/Windware - Website/receive_data_raspberry.py", line 29, in run_reciever
+    line = ser.readline().decode('utf-8').strip()  # Læser én linje og dekoder den til tekst
+           ^^^^^^^^^^^^^^
+  File "/home/windware/Desktop/Windware - Website/venv/lib/python3.11/site-packages/serial/serialposix.py", line 595, in read
+    raise SerialException(
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+raw line ND_DIR:300,WIND_SPEED:291,POWER:0,WIND_DIR_CHANGE:5
+Exception in thread Thread-1 (run_reciever):
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 975, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/windware/Desktop/Windware - Website/receive_data_raspberry.py", line 33, in run_reciever
+    print(f"Vindretning: {data['WIND_DIR']} grader, "
+                          ~~~~^^^^^^^^^^^^
+KeyError: 'WIND_DIR'
 
