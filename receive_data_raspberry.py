@@ -18,7 +18,7 @@ def run_reciever():
     with open(csv_filename, mode='a', newline='') as file:
         writer = csv.writer(file)  # opretter en CSV skriver-objekt(writer) som gør at man kan skrive data i korrekt CSV format.
         if file.tell() == 0:  # Tilføjer kolonneoverskrifter, hvis filen er tom(nyoprettet)
-            writer.writerow(["timestamp", "WIND_DIR", "WIND_SPEED", "POWER", "WIND_DIR_CHANGE"])
+            writer.writerow(["timestamp", "WIND_DIR", "WIND_SPEED", "POWER", "WIND_DIR_CHANGE", "DigDir"])
             
             
     print("Starter modtagelse af data...")  # Besked når programmet starter.
@@ -33,7 +33,8 @@ def run_reciever():
                 print(f"Vindretning: {data['WIND_DIR']} grader, "
                       f"Vindhastighed: {data['WIND_SPEED']} m/s, "
                       f"Effekt: {data['POWER']} W, "
-                      f"Retningsændring: {data['WIND_DIR_CHANGE']} grader")  # Udskriver data læsbart
+                      f"Retningsændring: {data['WIND_DIR_CHANGE']} grader"
+                      f"DigDir: {data['DigDir']}")  # Udskriver data læsbart
 
                 # Opretter et timestamp for målingen
                 timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")  # henter den aktuelle dato og klokkeslæt
@@ -47,7 +48,8 @@ def run_reciever():
                         data['WIND_DIR'],
                         data['WIND_SPEED'],
                         data['POWER'],
-                        data['WIND_DIR_CHANGE']
+                        data['WIND_DIR_CHANGE'],
+                        data['DigDir']
                     ])     
 
 # Funktion der parser en tekstlinje fra Arduino til en dictionary med key:value-par
