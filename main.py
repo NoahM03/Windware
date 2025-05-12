@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify
 # import subprocess
-from threading import Timer
+import threading
 from graph import get_latest_wind_speed, wind_speed_data, wind_direction_data
 # from receive_data_raspberry import run_reciever
 import receive_data_raspberry
@@ -11,10 +11,6 @@ app = Flask(__name__)
 # reciever_thread = Thread(target=run_reciever, daemon=True)
 # reciever_thread.start()
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
 # Timer flag (tjekker om timeren skal stoppe)
 stop_timer = False
 
@@ -24,16 +20,24 @@ def Data():
     # subprocess.run(["python", "graph.py"])
     # Timer(30, Data).start()
     
-    while true:
+    while True:
         try:
             get_latest_wind_speed()
             wind_speed_data()
             wind_direction_data()
         except Exception as e:
             print(f"[Graph loader] Error: {e}")
-        timer.sleep(300)
+        time.sleep(300)
             
     
+
+threading.Thread(target=Data, daemon=True).start()
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 
 @app.route("/windwaredata.html")
 def windwaredata():
@@ -56,6 +60,8 @@ def check_limit():
         return jsonify({"warning": True, "message": f'Wind speed warning! The wind speed has reached {get_latest_wind_speed()}!'})
     return jsonify({"warning": False})
 
-threading.Thread(target=Data, daemon=True).start()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)
 
 # app.run(use_reloader=True, host="0.0.0.0", port=5000)
