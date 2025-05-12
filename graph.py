@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import pandas as pd
@@ -6,24 +8,22 @@ import pandas as pd
 # Samle data fra CSV
 
 # Wind speed data indsamling (sidste 20)
-CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
-pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()
 
-# Wind direction data indsamling (sidste) 
-CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
-pre_Wind_direction_data = CSV_read["WIND_DIR"].iloc[-1]
+
+
 
 # Vindhastigheds parametre
     # Vind advarsel
-wind_warning = CSV_read["WIND_SPEED"].iloc[-1]
+# wind_warning = CSV_read["WIND_SPEED"].iloc[-1]
 
 def get_latest_wind_speed():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
     return CSV_read["WIND_SPEED"][0]
 
-print(wind_warning)
 
 def wind_speed_data():
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
+    pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()
     # Eksempel data set
     Wind_speed_data = np.column_stack((np.arange(1, len(pre_Wind_speed_data)+1),pre_Wind_speed_data)) #
 
@@ -42,12 +42,24 @@ def wind_speed_data():
 
     plt.xticks(np.arange(min(x), max(x) + 1, 2))  # Justere selv x-aksens størrelse
     plt.xlim(0, max(x))  # Grænser for x-aksen
-    plt.ylim(0, max(y))  # Grænser for y-aksen
+    #plt.ylim(0, max(y))  # Grænser for y-aksen
+    
+    y_min = min(y)
+    y_max = max(y)
+    
+    if y_min == y_max:
+        plt.ylim(y_min-1,y_max+1)
+    else:
+        plt.ylim(0,y_max+1)
     plt.yticks(np.arange(0, max(y) + 1, 2))  # Justere selv y-aksens størrelse
 
     plt.savefig("static/images/winddata")
+    plt.close()
 
 def wind_direction_data():
+    # Wind direction data indsamling (sidste) 
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
+    pre_Wind_direction_data = CSV_read["WIND_DIR"].iloc[-1]
     wind_direction = pre_Wind_direction_data
     print(pre_Wind_direction_data)
     # Create a circle
@@ -82,8 +94,7 @@ def wind_direction_data():
 
     # Save and show the plot
     plt.savefig("static/images/wind_direction.png")
-
-    return wind_direction  # Return the wind direction for further use
+    plt.close()
 
 wind_speed_data()
 wind_direction_data()
