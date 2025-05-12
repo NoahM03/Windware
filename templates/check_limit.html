@@ -1,0 +1,15 @@
+<script>
+    function checkLimit() {
+        fetch('/check_limit')
+            .then(response => response.json())
+            .then(data => {
+                if (data.warning) {
+                    alert(data.message); // Display a warning popup
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Check the limit every 5 seconds
+    setInterval(checkLimit, 5000);
+</script>
