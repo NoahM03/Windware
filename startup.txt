@@ -1,0 +1,20 @@
+[Unit]
+Description=Gunicorn instance for Windware    
+After=network.target
+
+[Service]
+User=windware
+Group=windware
+WorkingDirectory=/home/windware/Desktop/Windware - Website
+ExecStart="/home/windware/Desktop/Windware - Website/venv/bin/gunicorn" -w 1 -b 0.0.0.0:8000 main:app
+Environment="PATH=/home/windware/Desktop/Windware - Website/venv/bin"
+Environment="VIRTUAL_ENV=/home/windware/Desktop/Windware - Website/venv"
+ExecStartPre=/bin/sleep 10
+StandardOutput=file:/home/windware/Desktop/gunicorn.log
+StandardError=file:/home/windware/Desktop/gunicron_error.log
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
