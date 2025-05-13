@@ -4,8 +4,8 @@ import csv            # Bruges til at skrive til en CSV-fil
 from datetime import datetime  # Bruges til at tilføje tidsstempel til hver måling
 import threading
 
-
 def run_reciever():
+
     # Åben seriel port (skal muligvis tilpasses hvis nødvendigt, f.eks. port: /dev/ttyUSB0 i stedet for)
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     time.sleep(2)  # Venter 2 sekunder for at give Arduino tid til at genstarte og blive klar
@@ -18,53 +18,71 @@ def run_reciever():
     with open(csv_filename, mode='a', newline='') as file:
         writer = csv.writer(file)  # opretter en CSV skriver-objekt(writer) som gør at man kan skrive data i korrekt CSV format.
         if file.tell() == 0:  # Tilføjer kolonneoverskrifter, hvis filen er tom(nyoprettet)
-            writer.writerow(["timestamp", "WIND_DIR", "WIND_SPEED", "POWER", "WIND_DIR_CHANGE", "DigDir"])
-            
+            writer.writerow(["timestamp", "WIND_DIR", "WIND_SPEED", "POWER", "WIND_DIR_CHANGE"])
+
+     
+    # first_line_skipped = False # Flag til at springe den første linje over
+
+    # Vent et øjeblik for at sikre, at Arduino er klar
+    time.sleep(1)
+
+    # Tømseriel buffer for at sikre, at der ikke er gamle data
+    ser.reset_input_buffer()
             
     print("Starter modtagelse af data...")  # Besked når programmet starter.
 
-    # Uendelig løkke – lytter hele tiden på den serielle port(fra Arduino)
     while True:
-        if ser.in_waiting > 0:  # Tjekker om der er data klar i den serielle buffer
-            line = ser.readline().decode('utf-8').strip()  # Læser én linje og dekoder den til tekst
-            data = parse_data(line)  # Parser tekstlinjen til dictionary
+        if ser.in_waiting > 0:
+            line = ser.readline().decode('utf-8').strip()
 
-            if data:  # Hvis parsing lykkedes
+            #if not fitst_line_skipped:
+            #    print(f"Ignorere det første set af data: {line}")
+            #    fitst_line_skipped = True
+            #    continue
+
+            # Ignorer tomme linjer
+            if not line:
+                continue
+
+            # Debugging: Vis den rå linje fra Arduino
+            print(f"Raw line: {line}")
+
+            data = parse_data(line)
+
+            if data:
                 print(f"Vindretning: {data['WIND_DIR']} grader, "
-                      f"Vindhastighed: {data['WIND_SPEED']} m/s, "
-                      f"Effekt: {data['POWER']} W, "
-                      f"Retningsændring: {data['WIND_DIR_CHANGE']} grader"
-                      f"DigDir: {data['DigDir']}")  # Udskriver data læsbart
+                    f"Vindhastighed: {data['WIND_SPEED']} m/s, "
+                    f"Effekt: {data['POWER']} W, "
+                    f"Retningsændring: {data['WIND_DIR_CHANGE']} grader")
 
-                # Opretter et timestamp for målingen
-                timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")  # henter den aktuelle dato og klokkeslæt
-                # og formaterer det til en læsbar tekst efter skabelon f.eks. "08-05-2025 xx:xx:xx"
+                timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-                # Åbner CSV-filen igen og gemmer/tilføjer én ny række med måledata i CSV-filen med tidsstempel
-                with open(csv_filename, mode='a', newline='') as file: 
-                    writer = csv.writer(file) 
+                with open(csv_filename, mode='a', newline='') as file:
+                    writer = csv.writer(file)
                     writer.writerow([
                         timestamp,
                         data['WIND_DIR'],
                         data['WIND_SPEED'],
                         data['POWER'],
-                        data['WIND_DIR_CHANGE'],
-                        data['DigDir']
-                    ])     
+                        data['WIND_DIR_CHANGE']
+                    ])
 
 # Funktion der parser en tekstlinje fra Arduino til en dictionary med key:value-par
-# Dvs den analysere og omdanner tekstlinjen til data som python kan arbejde med.
+# Dvs den analysere og omdanner tekstlinjen til data som python kan arbejde med.    
 def parse_data(line):
     try:
-        data = {}  # Opretter tom dictionary til at gemme data
-        parts = line.split(',')  # Splitter linjen op ved komma
+        data = {}
+        parts = line.split(',')
         for part in parts:
-            key, value = part.split(':')  # Splitter hver del i nøgle og værdi adskilt af kolon
-            data[key.strip()] = float(value.strip())  # Fjerner mellemrum og konverterer til float
-        return data  # Returnerer den færdige dictionary
+            if ':' not in part:
+                raise ValueError(f"Mislykkedes data: {part}")
+            key, value = part.split(':')
+            data[key.strip()] = float(value.strip())
+        return data
     except Exception as e:
-        print(f"Parse error: {e}")  # Viser fejl hvis noget går galt
+        print(f"Parse error: {e}")
         return None
+
 
 
 
@@ -73,4 +91,4 @@ def start_receiver_thread():
 
 
 if __name__ == "__main__":
-    run_reciever()  # This only runs if you run this file directly
+    run_reciever()  # Kald funktionen til at starte modtagelse af data
