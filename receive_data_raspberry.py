@@ -3,6 +3,7 @@ import time           # Bruges til at vente efter Arduino reset
 import csv            # Bruges til at skrive til en CSV-fil
 from datetime import datetime  # Bruges til at tilføje tidsstempel til hver måling
 import threading
+# test
 
 # Denne funktion modtager data fra Arduino via seriel kommunikation og gemmer det i en CSV-fil.
 def run_reciever():
