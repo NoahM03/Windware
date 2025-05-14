@@ -7,20 +7,12 @@ import time
 
 app = Flask(__name__)
 
-# reciever_thread = Thread(target=run_reciever, daemon=True)
-# reciever_thread.start()
-
 # Timer flag (tjekker om timeren skal stoppe)
 stop_timer = False
 
 start_receiver_thread()
 
 def Data():
-    # if stop_timer:
-        # return  # Hvis timeren er true, returner vi og stopper funktionen
-    # subprocess.run(["python", "graph.py"])
-    # Timer(30, Data).start()
-    
     while True:
         try:
             get_latest_wind_speed()
@@ -64,5 +56,3 @@ def check_limit():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
-
-# app.run(use_reloader=True, host="0.0.0.0", port=5000)
