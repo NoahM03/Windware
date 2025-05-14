@@ -28,7 +28,7 @@ def Data():
             wind_direction_data()
         except Exception as e:
             print(f"[Graph loader] Error: {e}")
-        time.sleep(300)
+        time.sleep(60)
             
     
 
