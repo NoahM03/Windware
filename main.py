@@ -1,9 +1,10 @@
 from flask import Flask, render_template, jsonify
 # import subprocess
 import threading
-from graph import get_latest_wind_speed, wind_speed_data, wind_direction_data
+from graph import get_latest_wind_speed, wind_speed_data, wind_direction_data, load_latest_wind_speed, get_current_direction, power_data, get_current_power
 from receive_data_raspberry import start_receiver_thread
 import time
+import json
 
 app = Flask(__name__)
 
@@ -18,11 +19,13 @@ def Data():
             get_latest_wind_speed()
             wind_speed_data()
             wind_direction_data()
+            load_latest_wind_speed()
+            get_current_direction()
+            power_data()
+            get_current_power()
         except Exception as e:
             print(f"[Graph loader] Error: {e}")
-        time.sleep(60)
-            
-    
+        time.sleep(5)
 
 threading.Thread(target=Data, daemon=True).start()
 
@@ -34,7 +37,13 @@ def index():
 
 @app.route("/windwaredata.html")
 def windwaredata():
-    return render_template("windwaredata.html")
+    with open("static/data/wind_speed.json", "r") as f:
+        data = json.load(f)
+    with open("static/data/wind_direction.json", "r") as f:
+        data2 = json.load(f)
+    with open("static/data/power.json", "r") as f:
+        data3 = json.load(f)
+    return render_template("windwaredata.html", wind_speed=data["latest_wind_speed"], direction=data2["current_direction"], power=data3["current_power"])
 
 @app.route("/about us.html")
 def about_us():
@@ -50,7 +59,7 @@ def check_limit():
     limit = 13  # Sætter grænsen for vindhastighed
     latest_wind_speed = get_latest_wind_speed()
     if latest_wind_speed >= limit:
-        return jsonify({"warning": True, "message": f'Wind speed warning! The wind speed has reached {latest_wind_speed}!'})
+        return jsonify({"warning": True, "message": f'Wind speed warning! The wind speed has reached {latest_wind_speed} ms/s!'})
     return jsonify({"warning": False})
 
 

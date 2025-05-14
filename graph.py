@@ -4,22 +4,17 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import pandas as pd
-
-# Samle data fra CSV
-
-# Wind speed data indsamling (sidste 20)
-
-
-
-
-# Vindhastigheds parametre
-    # Vind advarsel
-# wind_warning = CSV_read["WIND_SPEED"].iloc[-1]
+import json
 
 def get_latest_wind_speed():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
-    return CSV_read["WIND_SPEED"][0]
+    return (CSV_read["WIND_SPEED"].iloc[-1])/100
 
+def load_latest_wind_speed():
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
+    latest_wind_speed = (CSV_read["WIND_SPEED"].iloc[-1])/100
+    with open("static/data/wind_speed.json", "w") as f:   
+        json.dump({"latest_wind_speed": latest_wind_speed}, f)
 
 def wind_speed_data():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
@@ -63,13 +58,17 @@ def wind_direction_data():
     pre_Wind_direction_data = CSV_read["WIND_DIR"].iloc[-1]
     wind_direction = pre_Wind_direction_data
     print(pre_Wind_direction_data)
+
     # Create a circle
     theta = np.linspace(0, 2 * np.pi, 100)
     x = np.cos(theta)
     y = np.sin(theta)
 
     # Convert the number (degrees) to radians
-    radians = np.deg2rad((np.negative((wind_direction/100)*22.5)) + 90)
+    adjust_index = (wind_direction/100-11) % 16
+    angle_degrees = adjust_index * 22.5
+    print(f"Adjusted Index: {adjust_index}, Angle Degrees: {angle_degrees}")
+    radians = np.deg2rad(np.negative(angle_degrees)+90)
 
     # Calculate the arrow's endpoint
     arrow_x = np.cos(radians)
@@ -89,7 +88,7 @@ def wind_direction_data():
     plt.gca().set_aspect('equal', adjustable='box')
     plt.axhline(0, color='gray', linewidth=0.5)
     plt.axvline(0, color='gray', linewidth=0.5)
-    plt.title(f"Arrow pointing at {(wind_direction/100)*22.5}°")
+    plt.title(f"Arrow pointing at {angle_degrees}°")
     plt.legend()
     plt.grid(True)
 
@@ -97,6 +96,46 @@ def wind_direction_data():
     plt.savefig("static/images/wind_direction.png")
     plt.close()
 
+def power_data():
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
+    pre_Power_data = [x / 100 for x in CSV_read["POWER"].tail(20).tolist()]
+    power_data = pre_Power_data
+
+    # Plot Power data
+    plt.figure(figsize=(10, 6))
+    plt.plot(power_data, marker='o', linestyle='-')
+    plt.xlabel('Time (60s intervals)')
+    plt.ylabel('Power (mW)')
+    plt.title('Power Data')
+    plt.grid(True)
+
+    plt.savefig("static/images/powerdata")
+    plt.close()
+
+def get_current_power():
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0)
+    current_power = (CSV_read["POWER"].iloc[-1])/100
+    with open("static/data/power.json", "w") as f:
+        json.dump({"current_power": current_power}, f)
+
+def get_current_direction():
+    CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0)
+    current_direction = (CSV_read["WIND_DIR"].iloc[-1])
+    adjust_index = (current_direction/100-11) % 16
+    angle_degrees = adjust_index * 22.5
+
+    direction= ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    degrees= [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5]
+    adjusted_angle = (angle_degrees + 11.25) % 360
+
+    for i in range(len(degrees)):
+        if adjusted_angle >= degrees[i] and adjusted_angle < degrees[i] + 22.5:
+            compass_direction = direction[i]
+            break
+
+    with open("static/data/wind_direction.json", "w") as f:
+        json.dump({"current_direction": compass_direction}, f)
+
 wind_speed_data()
 wind_direction_data()
-
+power_data()

@@ -37,11 +37,14 @@
     <h2>Windware Data</h2>
     <p>Windware data is a collection of wind speed and direction measurements taken from various locations. The data is used for analysis and modeling of wind patterns.</p>
     <h3>Winddata Overview</h3>
+    <p>Current wind speed: <strong>{{wind_speed}}</strong> m/s</p>
     <img src="../static/images/winddata.png" alt="Figure 1" width="600" title="x,y plot">
     <h3>Wind direction overview</h3>
-    <img src="../static/images/wind_direction.png" alt="Figure 2" width="600" title="Q-Q plot">
-    <h3>test exponential Q-Q plot</h3>
-    <img src="../static/images/Figure 1.png" alt="Figure 2" width="600" title="Q-Q plot">
+    <p>current wind direction: <strong>{{direction}}</strong> degrees</p>
+    <img src="../static/images/wind_direction.png" alt="Figure 2" width="600" title="Compas plot">
+    <h3>Power generation</h3>
+    <p>Current power generation: <strong>{{power}}</strong> mW</p>
+    <img src="../static/images/powerdata.png" alt="Figure 3" width="600" title="Power generation">
 
     <script>
         function checkLimit() {
