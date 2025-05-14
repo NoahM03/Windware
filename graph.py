@@ -8,18 +8,18 @@ import json
 
 def get_latest_wind_speed():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
-    return ((CSV_read["WIND_SPEED"].iloc[-1])/1000)/2
+    return ((CSV_read["WIND_SPEED"].iloc[-1])/100)
 
 def load_latest_wind_speed():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) 
-    latest_wind_speed = ((CSV_read["WIND_SPEED"].iloc[-1])/1000)/2
+    latest_wind_speed = ((CSV_read["WIND_SPEED"].iloc[-1])/100)
     with open("static/data/wind_speed.json", "w") as f:   
         json.dump({"latest_wind_speed": latest_wind_speed}, f)
 
 def wind_speed_data():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
     # pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()
-    pre_Wind_speed_data = [(x / 1000) / 2 for x in CSV_read["WIND_SPEED"].tail(20).tolist()]
+    pre_Wind_speed_data = [x / 100 for x in CSV_read["WIND_SPEED"].tail(20).tolist()]
     # Eksempel data set
     Wind_speed_data = np.column_stack((np.arange(1, len(pre_Wind_speed_data)+1),pre_Wind_speed_data)) #
 
