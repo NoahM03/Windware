@@ -23,7 +23,8 @@ def get_latest_wind_speed():
 
 def wind_speed_data():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0) # Læser CSV filen
-    pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()/100
+    # pre_Wind_speed_data = CSV_read["WIND_SPEED"].tail(20).tolist()
+    pre_Wind_speed_data = [x / 100 for x in CSV_read["WIND_SPEED"].tail(20).tolist()]
     # Eksempel data set
     Wind_speed_data = np.column_stack((np.arange(1, len(pre_Wind_speed_data)+1),pre_Wind_speed_data)) #
 
