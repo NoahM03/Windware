@@ -65,7 +65,8 @@ def wind_direction_data():
     y = np.sin(theta)
 
     # Convert the number (degrees) to radians
-    adjust_index = (wind_direction/100-11) % 16
+    direction_index = int(wind_direction / 100)
+    adjust_index = (11 - direction_index) % 16
     angle_degrees = adjust_index * 22.5
     print(f"Adjusted Index: {adjust_index}, Angle Degrees: {angle_degrees}")
     radians = np.deg2rad(np.negative(angle_degrees)+90)
@@ -114,14 +115,16 @@ def power_data():
 
 def get_current_power():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0)
-    current_power = (CSV_read["POWER"].iloc[-1])/100
+    current_power = 0 if CSV_read["POWER"].iloc[-1] == 0 else CSV_read["POWER"].iloc[-1] / 100
     with open("static/data/power.json", "w") as f:
         json.dump({"current_power": current_power}, f)
+    return current_power
 
 def get_current_direction():
     CSV_read = pd.read_csv("sensor_data.csv", sep=",", header=0)
     current_direction = (CSV_read["WIND_DIR"].iloc[-1])
-    adjust_index = (current_direction/100-11) % 16
+    direction_index = int(current_direction / 100)
+    adjust_index = (11 - direction_index) % 16
     angle_degrees = adjust_index * 22.5
 
     direction= ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
@@ -135,6 +138,14 @@ def get_current_direction():
 
     with open("static/data/wind_direction.json", "w") as f:
         json.dump({"current_direction": compass_direction}, f)
+
+    print(f"Current direction: {compass_direction} ({angle_degrees}°)")
+
+
+def prep_download_data():
+    CSV_read = pd.read_csv("sensor_data.csv").tail(20) # Læser CSV filen
+    CSV_read.to_csv("static/download/sensor_data_copy.csv", index=False) # Gemmer CSV filen i static/data mappen
+
 
 wind_speed_data()
 wind_direction_data()

@@ -1,0 +1,15 @@
+<script>
+    function no_power_when_wind_speed() {
+        fetch('/no_power_when_wind_speed')
+            .then(response => response.json())
+            .then(data => {
+                if (data.warning) {
+                    alert(data.message); // Display a warning popup
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Check the limit every 5 seconds
+    setInterval(no_power_when_wind_speed, 5000);
+</script>
